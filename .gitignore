@@ -1,3 +1,13 @@
+# mac
+.DS_Store
+
+# vim swap files
+*.swp
+
+# project generated folders
+build
+
+# cmake
 CMakeCache.txt
 CMakeFiles
 Makefile
