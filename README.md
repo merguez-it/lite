@@ -49,3 +49,52 @@ You need to install [MinGW](http://www.mingw.org/wiki/InstallationHOWTOforMinGW)
 
 If you want to use Visual Studio... Try it ;)
 
+## Usage
+
+### Simple
+
+```cpp
+std::string tmpl = "Hello {% $who %}{% $sign %}\nHow are you ?";
+
+std::map<std::string, lite::data *> data;
+data["who"] = lite::make_data("world");
+data["sign"] = lite::make_data("!");
+
+std::string result = lite::render(tmpl, data);
+```
+
+### IF
+
+(*WIP*)
+
+```cpp
+std::string tmpl = "Hello " 
+  "{% if name %}{% $name %}{% end %}" 
+  "{% if not name %}world{% end %}";
+
+std::map<std::string, lite::data *> data;
+data["person"] = lite::make_data("you");
+
+std::string result = lite::render(tmpl, data);
+```
+
+### FOR
+
+(*WIP*)
+
+```cpp
+std::string tmpl = "{% for number in sequence %}"
+  "* {% $number %}\n"
+  "{% end %}"; 
+
+std::vector<lite::data *> list;
+list.push_back(lite::make_data("1"));
+list.push_back(lite::make_data("2"));
+list.push_back(lite::make_data("3"));
+
+std::map<std::string, lite::data *> data;
+data["sequence"] = lite::make_data(list);
+
+std::string result = lite::render(tmpl, data);
+```
+
