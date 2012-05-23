@@ -4,7 +4,7 @@ LIghtweight Template Engine for C++ inspired by [cpptemplate](https://bitbucket.
 
 So, why ? - Because I want something simple Boost and Qt free.
 
-*This is a Work In Progress* So test it but don't use it.
+*This is a Work In Progress.* So test it but don't use it.
 
 ## Dependencies
 
@@ -14,8 +14,8 @@ So, why ? - Because I want something simple Boost and Qt free.
 
 ### Documentation
 
-* [doxygen](http://doxygen.org/) (TODO)
-* [graphviz](http://graphviz.org/) (optional - TODO)
+* [doxygen](http://doxygen.org/) (optional)
+* [graphviz](http://graphviz.org/) (optional)
 
 ### Testing 
 
@@ -33,6 +33,7 @@ Install [cmake](http://www.cmake.org/cmake/help/install.html), [gtest](http://co
     cmake ..
     make
     make test
+    make doc
 
 ### On Windows
 
@@ -44,6 +45,7 @@ You need to install [MinGW](http://www.mingw.org/wiki/InstallationHOWTOforMinGW)
     cmake -G "MinGW Makefiles" ..
     mingw32-make
     mingw32-make test
+    mingw32-make doc
 
 If you want to use Visual Studio... Try it ;)
 

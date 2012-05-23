@@ -6,6 +6,8 @@
 
 # project generated folders
 build
+.build
+doc
 
 # cmake
 CMakeCache.txt
