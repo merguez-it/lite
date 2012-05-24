@@ -11,6 +11,13 @@
 #define TOKEN_ENDIF "endif"
 #define TOKEN_ENDFOR "endfor"
 
+#define OP_EQUAL "=="
+#define OP_NOTEQUAL "!="
+#define OP_LESSTHAN "<"
+#define OP_LESSOREQUAL "<="
+#define OP_GREATERTHAN ">"
+#define OP_GREATEREQUAL ">="
+
 namespace lite {
   std::string data::get() {
     throw std::logic_error("Not a value");
@@ -136,7 +143,7 @@ namespace lite {
   }
 
   std::string token_none::get_text(std::map<std::string, data *> data) {
-    throw std::logic_error("This token can't have value");
+    throw std::logic_error("Malformated template (unexpected token NONE)");
   }
 
   void token_none::set_childs(std::vector<token *> t) {
@@ -154,7 +161,7 @@ namespace lite {
   }
 
   std::string token_end::get_text(std::map<std::string, data *> data) {
-    throw std::logic_error("This token can't have value");
+    throw std::logic_error("Malformated template (unexpected token END)");
   }
 
   void token_end::set_childs(std::vector<token *> t) {
@@ -164,7 +171,74 @@ namespace lite {
   std::vector<token *> token_end::get_childs() {
     throw std::logic_error("This token can't have child");
   }
+
+  token_if::token_if(std::vector<std::string> & data) : 
+    type_(IF), data_(data) {}
   
+  token_type token_if::get_type() {
+    return type_;
+  }
+
+  std::string token_if::get_text(std::map<std::string, data *> data) {
+    std::string result;
+
+    if(is_true(data)) {
+      std::vector<token *>::iterator it;
+      std::vector<token *> childs = get_childs();
+      for(it = childs.begin(); it < childs.end(); it++) {
+        result.append((*it)->get_text(data));
+      }
+    }
+
+    return result;
+  }
+
+  bool token_if::is_true(std::map<std::string, data *> data) {
+    bool result = false;
+    bool negative = false;
+    int var_pos = 1;
+    if(data_[1] == "not") {
+      negative = true;
+      var_pos = 2;
+    }
+
+    std::string var_name = data_[var_pos];
+    if(data.count(var_name) != 0) {
+      lite::data * var_data = data[var_name];
+      if(data_.size() > var_pos + 1) {
+        if(var_data->get_type() == VALUE) {
+          std::string var_value = var_data->get();
+          std::string op = data_[var_pos + 1];
+          std::string value = data_[var_pos + 2];
+          if(op == OP_EQUAL) {
+            result = (var_value == value);
+          } else if(op == OP_NOTEQUAL) {
+            result = (var_value != value);
+          } else if(op == OP_LESSTHAN) {
+            result = (var_value < value);
+          } else if(op == OP_LESSOREQUAL) {
+            result = (var_value <= value);
+          } else if(op == OP_GREATERTHAN) {
+            result = (var_value > value);
+          } else if(op == OP_GREATEREQUAL) {
+            result = (var_value >= value);
+          } else {
+            result = false;
+          }
+        } else {
+          result = false;
+        }
+      } else {
+        result = true;
+      }
+    }
+    
+    if(negative) {
+      return !result;
+    }
+    return result;
+  }
+
   // ...
 
   std::string trim(std::string str) {
@@ -197,6 +271,20 @@ namespace lite {
 
     return result;
   }
+
+  std::vector<std::string>& split(const std::string &s, char delim, std::vector<std::string> &elems) {
+    std::stringstream ss(s);
+    std::string item;
+    while(std::getline(ss, item, delim)) {
+      elems.push_back(trim(item));
+    }   
+    return elems;
+  }   
+
+  std::vector<std::string> split(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    return split(s, delim, elems);
+  }  
 
   // ...
 
@@ -264,7 +352,14 @@ namespace lite {
       if(token_data == "end") {
         t = new token_end();
       } else {
-        // TODO
+        std::vector<std::string> data = split(token_data, ' ');
+        if(data[0] == "if") {
+          t = new token_if(data);
+        } else if(data[0] == "for") {
+          // t = new token_for(data); // TODO
+        } else {
+          throw std::logic_error("Malformated template (invalid token " + data[0] + ")");
+        }
       }
     }
 
@@ -305,24 +400,4 @@ namespace lite {
     return result;
   }
 }
-
-/*
-int main(void) {
-  std::string tmpl = "Hello {% $who %}{% $sign %}\nHow are you ?";
-  std::map<std::string, lite::data *> data;
-  data["who"] = lite::make_data("world");
-  data["sign"] = lite::make_data("!");
-
-  std::vector<lite::data *> list;
-  list.push_back(lite::make_data("1"));
-  list.push_back(lite::make_data("2"));
-  list.push_back(lite::make_data("3"));
-
-  data["list"] = lite::make_data(list);
-
-  std::string result = lite::render(tmpl, data);
-  std::cout << "----------------------------" << std::endl;
-  std::cout << "[" << result << "]" << std::endl;
-}
-*/
 

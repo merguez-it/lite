@@ -65,8 +65,6 @@ std::string result = lite::render(tmpl, data);
 
 ### IF
 
-(*WIP*)
-
 ```cpp
 std::string tmpl = "Hello " 
   "{% if name %}{% $name %}{% end %}" 
@@ -77,6 +75,26 @@ data["person"] = lite::make_data("you");
 
 std::string result = lite::render(tmpl, data);
 ```
+
+You can use 
+
+    $var 
+    $var == value
+    $var != value
+    $var < value
+    $var > value
+    $var <= value
+    $var >= value
+
+Or its negation 
+
+    not $var
+    not $var == value
+    not $var != value
+    not $var < value
+    not $var > value
+    not $var <= value
+    not $var >= value
 
 ### FOR
 

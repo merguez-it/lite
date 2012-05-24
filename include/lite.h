@@ -128,26 +128,27 @@ namespace lite {
       token_type type_;
   };
 
-  /*
   class token_if : public token {
     public:
-      token_none();
+      token_if(std::vector<std::string> & data);
 
       token_type get_type();
       std::string get_text(std::map<std::string, data *> data);
-      void set_childs(std::vector<token *> t);
-      std::vector<token *> get_childs();
 
     private:
-      bool is_true();
+      bool is_true(std::map<std::string, data *> data);
 
     private:
       token_type type_;
+      std::vector<std::string> data_;
   };
-  */
+
+  // class token_for : public token { ... } // TODO
 
   std::string trim(std::string str); 
   std::string squeeze(const std::string & str);
+  std::vector<std::string>& split(const std::string &s, char delim, std::vector<std::string> &elems); 
+  std::vector<std::string> split(const std::string &s, char delim); 
 
   data * make_data(std::string value); 
   data * make_data(std::vector<data *> values); 
