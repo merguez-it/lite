@@ -6,6 +6,7 @@
 #define TOKEN_OPEN "{%"
 #define TOKEN_CLOSE "%}"
 #define TOKEN_VARIABLE "$"
+#define TOKEN_VARIABLE_SEPARATOR "."
 #define TOKEN_FOR "for"
 #define TOKEN_IF "if"
 #define TOKEN_ENDIF "endif"
@@ -88,6 +89,10 @@ namespace lite {
     return childs_;
   }
 
+  data * token::get_data(std::map<std::string, data *> data) {
+    throw std::logic_error("No data for this this token");
+  }
+
   token_variable::token_variable(std::string & data) : 
     type_(VARIABLE), data_(data) {};
 
@@ -96,8 +101,11 @@ namespace lite {
   }
 
   std::string token_variable::get_text(std::map<std::string, data *> data) {
-    //return data[data_]->get();
     return get_data_value(make_data(data), data_);
+  }
+
+  data * token_variable::get_data(std::map<std::string, data *> data) {
+    return get_data_r(make_data(data), data_);
   }
 
   std::string token_variable::get_data_value(data * datas, std::string key) {
@@ -105,7 +113,7 @@ namespace lite {
       return "";
     }
 
-    size_t dot_pos = key.find_first_of(".");
+    size_t dot_pos = key.find_first_of(TOKEN_VARIABLE_SEPARATOR);
     if(dot_pos == std::string::npos) {
       if(datas->get(key) != NULL && datas->get(key)->get_type() == VALUE) {
         return datas->get(key)->get();
@@ -123,6 +131,31 @@ namespace lite {
     }
 
     return "";
+  }
+
+  data * token_variable::get_data_r(data * datas, std::string key) {
+    if(datas->get_type() != MAP) {
+      return NULL;
+    }
+
+    size_t dot_pos = key.find_first_of(TOKEN_VARIABLE_SEPARATOR);
+    if(dot_pos == std::string::npos) {
+      if(datas->get(key) != NULL) {
+        return datas->get(key);
+      } else {
+        return NULL;
+      }
+    } else {
+      std::string pre = key.substr(0, dot_pos);
+      std::string post = key.substr(dot_pos + 1);
+      if(datas->get(pre) != NULL && datas->get(pre)->get_type() == MAP) {
+        return get_data_r(datas->get(pre), post);
+      } else {
+        return NULL;
+      }
+    }
+
+    return NULL;
   }
 
   token_text::token_text(std::string & data) : 
@@ -203,28 +236,25 @@ namespace lite {
     }
 
     std::string var_name = data_[var_pos];
-    if(data.count(var_name) != 0) {
-      lite::data * var_data = data[var_name];
+
+    token * t = new token_variable(var_name);
+    if(NULL != t->get_data(data)) {
+      std::string var_value = t->get_text(data);
       if(data_.size() > var_pos + 1) {
-        if(var_data->get_type() == VALUE) {
-          std::string var_value = var_data->get();
-          std::string op = data_[var_pos + 1];
-          std::string value = data_[var_pos + 2];
-          if(op == OP_EQUAL) {
-            result = (var_value == value);
-          } else if(op == OP_NOTEQUAL) {
-            result = (var_value != value);
-          } else if(op == OP_LESSTHAN) {
-            result = (var_value < value);
-          } else if(op == OP_LESSOREQUAL) {
-            result = (var_value <= value);
-          } else if(op == OP_GREATERTHAN) {
-            result = (var_value > value);
-          } else if(op == OP_GREATEREQUAL) {
-            result = (var_value >= value);
-          } else {
-            result = false;
-          }
+        std::string op = data_[var_pos + 1];
+        std::string value = data_[var_pos + 2];
+        if(op == OP_EQUAL) {
+          result = (var_value == value);
+        } else if(op == OP_NOTEQUAL) {
+          result = (var_value != value);
+        } else if(op == OP_LESSTHAN) {
+          result = (var_value < value);
+        } else if(op == OP_LESSOREQUAL) {
+          result = (var_value <= value);
+        } else if(op == OP_GREATERTHAN) {
+          result = (var_value > value);
+        } else if(op == OP_GREATEREQUAL) {
+          result = (var_value >= value);
         } else {
           result = false;
         }
@@ -232,10 +262,44 @@ namespace lite {
         result = true;
       }
     }
+
+    delete t;
     
     if(negative) {
       return !result;
     }
+    return result;
+  }
+
+  token_for::token_for(std::vector<std::string> & data) : 
+    type_(FOR), data_(data) {}
+  
+  token_type token_for::get_type() {
+    return type_;
+  }
+
+  std::string token_for::get_text(std::map<std::string, data *> data) {
+    std::string result;
+    std::map<std::string, lite::data *> data_copy(data);
+    std::string var_name = data_[1];
+    std::string in_name = data_[3];
+
+    token * t = new token_variable(in_name);
+    lite::data * v = t->get_data(data);
+    if(NULL == v || LIST != v->get_type()) {
+      return "";
+    }
+
+    for(size_t i = 0; i < v->size(); i++) {
+      data_copy[var_name] = v->get(i);
+
+      std::vector<token *>::iterator it;
+      std::vector<token *> childs = get_childs();
+      for(it = childs.begin(); it < childs.end(); it++) {
+        result.append((*it)->get_text(data_copy));
+      }
+    }
+
     return result;
   }
 
@@ -356,7 +420,7 @@ namespace lite {
         if(data[0] == "if") {
           t = new token_if(data);
         } else if(data[0] == "for") {
-          // t = new token_for(data); // TODO
+          t = new token_for(data); 
         } else {
           throw std::logic_error("Malformated template (invalid token " + data[0] + ")");
         }

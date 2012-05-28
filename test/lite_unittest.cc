@@ -53,3 +53,17 @@ TEST(Lite, IfAndIfNotNotEqual) {
   EXPECT_STREQ("Hello Lite!", result2.c_str());
 }
 
+TEST(Lite, For) {
+  std::string tmpl = "{% for val in count %}* {% $val %}\n{% end %}";
+  std::map<std::string, lite::data *> data;
+
+  std::vector<lite::data *> list;
+  list.push_back(lite::make_data("one"));
+  list.push_back(lite::make_data("two"));
+  list.push_back(lite::make_data("three"));
+
+  data["count"] = lite::make_data(list);
+
+  std::string result = lite::render(tmpl, data);
+  EXPECT_STREQ("* one\n* two\n* three\n", result.c_str());
+}

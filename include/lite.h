@@ -66,8 +66,10 @@ namespace lite {
   class token;
   class token {
     public:
+      virtual ~token() {};
       virtual token_type get_type() = 0;
       virtual std::string get_text(std::map<std::string, data *> data) = 0;
+      virtual data * get_data(std::map<std::string, data *> data);
       virtual void set_childs(std::vector<token *> t);
       virtual std::vector<token *> get_childs();
 
@@ -81,9 +83,11 @@ namespace lite {
 
       token_type get_type();
       std::string get_text(std::map<std::string, data *> data);
+      data * get_data(std::map<std::string, data *> data);
 
     private:
       std::string get_data_value(data * data, std::string key);
+      data * get_data_r(data * data, std::string key);
 
     private:
       token_type type_;
@@ -143,7 +147,17 @@ namespace lite {
       std::vector<std::string> data_;
   };
 
-  // class token_for : public token { ... } // TODO
+  class token_for : public token { 
+    public:
+      token_for(std::vector<std::string> & data);
+
+      token_type get_type();
+      std::string get_text(std::map<std::string, data *> data);
+
+    private:
+      token_type type_;
+      std::vector<std::string> data_;
+  }; 
 
   std::string trim(std::string str); 
   std::string squeeze(const std::string & str);
