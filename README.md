@@ -98,8 +98,6 @@ Or its negation
 
 ### FOR
 
-(*WIP*)
-
 ```cpp
 std::string tmpl = "{% for number in sequence %}"
   "* {% $number %}\n"
