@@ -34,6 +34,7 @@ Install [cmake](http://www.cmake.org/cmake/help/install.html), [gtest](http://co
     make
     make test
     make doc
+    make install
 
 ### On Windows
 
@@ -46,6 +47,7 @@ You need to install [MinGW](http://www.mingw.org/wiki/InstallationHOWTOforMinGW)
     mingw32-make
     mingw32-make test
     mingw32-make doc
+    mingw32-make install
 
 If you want to use Visual Studio... Try it ;)
 

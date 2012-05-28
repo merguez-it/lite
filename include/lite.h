@@ -2,6 +2,8 @@
 #include <map>
 #include <string>
 
+#define LITE_VERSION "0.0.1"
+
 namespace lite {
   enum token_type {
     NONE,
