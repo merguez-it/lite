@@ -1,6 +1,14 @@
 include(FindGTest)
 include(CheckFunctionExists)
 
+set(LITE_TEST_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+configure_file(
+  ${LITE_SOURCE_DIR}/config-test.h.in
+  ${LITE_OUTPUT_TEMP_DIR}/config-test.h
+  )
+
+include_directories(${LITE_OUTPUT_TEMP_DIR})
+
 CHECK_FUNCTION_EXISTS(pthread_create HAVE_PTHREAD)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")

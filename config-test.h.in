@@ -1,0 +1,8 @@
+#ifndef __LITE_CONFIG_TEST_H
+#define __LITE_CONFIG_TEST_H
+
+#define STR(X) #X
+#define LITE_TESTS_PATH(PATH) STR(${LITE_TEST_PATH}/PATH)
+
+#endif // __LITE_CONFIG_TEST_H
+

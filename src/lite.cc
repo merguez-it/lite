@@ -1,5 +1,7 @@
 #include <iostream>
 #include <sstream>
+#include <fstream>
+#include <string>
 #include <stdexcept>
 #include "lite.h"
 
@@ -229,7 +231,7 @@ namespace lite {
   bool token_if::is_true(std::map<std::string, data *> data) {
     bool result = false;
     bool negative = false;
-    int var_pos = 1;
+    size_t var_pos = 1;
     if(data_[1] == "not") {
       negative = true;
       var_pos = 2;
@@ -461,7 +463,29 @@ namespace lite {
       result.append((*it)->get_text(data));
     }
 
+    for(it = tree.begin(); it < tree.end(); it++) {
+      delete (*it);
+    }
+
     return result;
+  }
+
+  std::string render_file(const std::string & filename, std::map<std::string, data *> data) {
+    std::string line;
+    std::string tmpl_data;
+
+    std::ifstream myfile(filename.c_str());
+    if (myfile.is_open()) {
+      while (myfile.good()) {
+        getline (myfile,line);
+        tmpl_data.append(line);
+      }
+      myfile.close();
+    } else {
+      throw std::runtime_error("Can't open file " + filename);
+    }
+
+    return render(tmpl_data, data);
   }
 }
 

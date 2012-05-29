@@ -1,4 +1,5 @@
 #include "lite.h"
+#include "config-test.h"
 #include "gtest/gtest.h"
 
 TEST(Lite, Simple) {
@@ -66,4 +67,14 @@ TEST(Lite, For) {
 
   std::string result = lite::render(tmpl, data);
   EXPECT_STREQ("* one\n* two\n* three\n", result.c_str());
+}
+
+TEST(Lite, RenderTemplateFile) {
+  std::string tmpl(LITE_TESTS_PATH(lite.template));
+  std::map<std::string, lite::data *> data;
+  data["who"] = lite::make_data("world");
+
+  std::string result = lite::render_file(tmpl, data);
+
+  EXPECT_EQ("Hello world!", result);
 }

@@ -175,5 +175,6 @@ namespace lite {
   std::vector<token *> gen_tree(std::vector<token *> & tokens, token_type until = NONE); 
 
   std::string render(const std::string & tmpl_text, std::map<std::string, data *> data);
+  std::string render_file(const std::string & filename, std::map<std::string, data *> data);
 }
 
