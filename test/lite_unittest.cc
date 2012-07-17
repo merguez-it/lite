@@ -11,6 +11,9 @@ TEST(Lite, Simple) {
   std::string result = lite::render(tmpl, data);
 
   EXPECT_EQ("Hello world!\nHow are you ?", result);
+
+  delete data["who"];
+  delete data["sign"];
 }
 
 TEST(Lite, IfAndIfNot) {
@@ -24,6 +27,9 @@ TEST(Lite, IfAndIfNot) {
   data["who"] = lite::make_data("Lite");
   std::string result2 = lite::render(tmpl, data);
   EXPECT_STREQ("Hello Lite!", result2.c_str());
+
+  delete data["sign"];
+  delete data["who"];
 }
 
 TEST(Lite, IfAndIfNotEqual) {
@@ -35,9 +41,13 @@ TEST(Lite, IfAndIfNotEqual) {
   std::string result1 = lite::render(tmpl, data);
   EXPECT_STREQ("Hello World!", result1.c_str());
 
+  delete data["who"];
   data["who"] = lite::make_data("Lite");
   std::string result2 = lite::render(tmpl, data);
   EXPECT_STREQ("Hello Lite!", result2.c_str());
+
+  delete data["sign"];
+  delete data["who"];
 }
 
 TEST(Lite, IfAndIfNotNotEqual) {
@@ -49,9 +59,13 @@ TEST(Lite, IfAndIfNotNotEqual) {
   std::string result1 = lite::render(tmpl, data);
   EXPECT_STREQ("Hello World!", result1.c_str());
 
+  delete data["who"];
   data["who"] = lite::make_data("Lite");
   std::string result2 = lite::render(tmpl, data);
   EXPECT_STREQ("Hello Lite!", result2.c_str());
+
+  delete data["who"];
+  delete data["sign"];
 }
 
 TEST(Lite, For) {
@@ -67,6 +81,12 @@ TEST(Lite, For) {
 
   std::string result = lite::render(tmpl, data);
   EXPECT_STREQ("* one\n* two\n* three\n", result.c_str());
+
+  std::vector<lite::data *>::iterator it;
+  for(it = list.begin(); it < list.end(); it++) {
+    delete *it;
+  }
+  delete data["count"];
 }
 
 TEST(Lite, RenderTemplateFile) {
@@ -77,4 +97,6 @@ TEST(Lite, RenderTemplateFile) {
   std::string result = lite::render_file(tmpl, data);
 
   EXPECT_EQ("Hello world!", result);
+
+  delete data["who"];
 }

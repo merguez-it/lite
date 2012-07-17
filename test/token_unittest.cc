@@ -15,6 +15,10 @@ TEST(Token, TokenVariableSimple) {
   lite::token * tv_b = new lite::token_variable(tv_b_key);
   EXPECT_EQ(lite::VARIABLE, tv_b->get_type());
   EXPECT_EQ("", tv_b->get_text(data));
+
+  delete data[tv_key];
+  delete tv_a;
+  delete tv_b;
 }
 
 TEST(Token, TokenVariableMap) {
@@ -34,4 +38,9 @@ TEST(Token, TokenVariableMap) {
   lite::token * tv_b = new lite::token_variable(tv_b_key);
   EXPECT_EQ(lite::VARIABLE, tv_b->get_type());
   EXPECT_EQ("", tv_b->get_text(data));
+
+  delete values["z"];
+  delete data["a"];
+  delete tv_a;
+  delete tv_b;
 }

@@ -467,6 +467,12 @@ namespace lite {
       delete (*it);
     }
 
+    /*
+    for(it = tokens.begin(); it < tokens.end(); it++) {
+      delete (*it);
+    }
+    */
+
     return result;
   }
 
@@ -478,7 +484,7 @@ namespace lite {
     if (myfile.is_open()) {
       while (myfile.good()) {
         getline (myfile,line);
-        tmpl_data.append(line);
+        tmpl_data.append(line + "\n");
       }
       myfile.close();
     } else {

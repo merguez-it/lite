@@ -7,6 +7,8 @@ TEST(Data, DataValue) {
 
   EXPECT_EQ(11, dv->size());
   EXPECT_EQ(value, dv->get());
+
+  delete dv;
 }
 
 TEST(Data, DataList) {
@@ -21,6 +23,13 @@ TEST(Data, DataList) {
   EXPECT_EQ("2", lv->get(1)->get());
   EXPECT_EQ("3", lv->get(2)->get());
   EXPECT_TRUE(NULL == lv->get(3));
+
+  std::vector<lite::data *>::iterator it;
+
+  for(it = list.begin(); it < list.end(); it++) {
+    delete *it;
+  }
+  delete lv;
 }
 
 TEST(Data, DataMap) {
@@ -35,5 +44,11 @@ TEST(Data, DataMap) {
   EXPECT_EQ("2", mv->get("B")->get());
   EXPECT_EQ("3", mv->get("C")->get());
   EXPECT_TRUE(NULL == mv->get("D"));
+
+  delete map["A"];
+  delete map["B"];
+  delete map["C"];
+
+  delete mv;
 }
 

@@ -22,6 +22,7 @@ namespace lite {
 
   class data {
     public:
+      virtual ~data() {};
       virtual data_type get_type() = 0;
       virtual std::string get();
       virtual data * get(int i);
