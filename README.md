@@ -23,7 +23,7 @@ So, why ? - Because I want something simple Boost and Qt free.
 
 ## Compiling
 
-Install [cmake](http://www.cmake.org/cmake/help/install.html), [gtest](http://code.google.com/p/googletest/), [doxygen](http://www.stack.nl/~dimitri/doxygen/install.html) and [graphviz](http://www.graphviz.org/Download.php), then :
+Install [cmake](http://www.cmake.org/cmake/help/install.html), [doxygen](http://www.stack.nl/~dimitri/doxygen/install.html) and [graphviz](http://www.graphviz.org/Download.php), then :
 
 ### On MacOSX, or Linux
 
