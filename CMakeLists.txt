@@ -3,7 +3,7 @@ project(LITE)
 
 include(FindDoxygen)
 
-set(LITE_OUTPUT_TEMP_DIR ${LITE_SOURCE_DIR}/.build)
+set(LITE_OUTPUT_TEMP_DIR ${LITE_BINARY_DIR}/.build)
 
 add_definitions(-Wall)
 if(DEBUG)
@@ -35,4 +35,5 @@ endif()
 
 enable_testing()
 add_subdirectory(src)
+add_subdirectory(ext)
 add_subdirectory(test)

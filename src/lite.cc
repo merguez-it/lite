@@ -484,7 +484,7 @@ namespace lite {
     if (myfile.is_open()) {
       while (myfile.good()) {
         getline (myfile,line);
-        tmpl_data.append(line + "\n");
+        tmpl_data.append(line);
       }
       myfile.close();
     } else {
