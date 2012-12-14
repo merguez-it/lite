@@ -1,54 +1,57 @@
 #include "lite.h"
 #include "gtest/gtest.h"
 
-TEST(Data, DataValue) {
-  std::string value("Hello World");
-  lite::data * dv = lite::make_data(value);
+TEST(Data, String) {
+  lite::data *var = new lite::string("Hello World!");
 
-  EXPECT_EQ(11, dv->size());
-  EXPECT_EQ(value, dv->get());
+  ASSERT_EQ(lite::STRING, var->type());
+  ASSERT_EQ("Hello World!", var->str());
+  ASSERT_EQ(12, var->size());
 
-  delete dv;
+  (*var) = "Hola Mundo!";
+
+  ASSERT_EQ(lite::STRING, var->type());
+  ASSERT_EQ("Hola Mundo!", var->str());
+  ASSERT_EQ(11, var->size());
+
+  delete var;
 }
 
-TEST(Data, DataList) {
-  std::vector<lite::data *> list;
-  list.push_back(lite::make_data("1"));
-  list.push_back(lite::make_data("2"));
-  list.push_back(lite::make_data("3"));
-  lite::data * lv = lite::make_data(list); 
+TEST(Data, List) {
+  lite::data *list = new lite::list();
 
-  EXPECT_EQ(3, lv->size());
-  EXPECT_EQ("1", lv->get(0)->get());
-  EXPECT_EQ("2", lv->get(1)->get());
-  EXPECT_EQ("3", lv->get(2)->get());
-  EXPECT_TRUE(NULL == lv->get(3));
+  lite::data *hw = new lite::string("Hello World!");
+  lite::data *hm = new lite::string("Hola Mundo!");
 
-  std::vector<lite::data *>::iterator it;
+  list->set(hw);
+  (*list) << hm;
+  list->set("Bonjour Monde!");
+  (*list) << "Ciao Tutti!";
 
-  for(it = list.begin(); it < list.end(); it++) {
-    delete *it;
-  }
-  delete lv;
+  ASSERT_EQ(lite::LIST, list->type());
+  ASSERT_EQ(4, list->size());
+  ASSERT_EQ("Hello World!", list->at(0)->str());
+  ASSERT_EQ("Hola Mundo!", (*list)[1]->str());
+  ASSERT_EQ("Bonjour Monde!", list->at(2)->str());
+  ASSERT_EQ("Ciao Tutti!", (*list)[3]->str());
+
+  delete hm;
+  delete hw;
+  delete list;
 }
 
-TEST(Data, DataMap) {
-  std::map<std::string, lite::data *> map;
-  map["A"] = lite::make_data("1");
-  map["B"] = lite::make_data("2");
-  map["C"] = lite::make_data("3");
-  lite::data * mv = lite::make_data(map);
+TEST(Data, Map) {
+  lite::data *map = new lite::map();
 
-  EXPECT_EQ(3, mv->size());
-  EXPECT_EQ("1", mv->get("A")->get());
-  EXPECT_EQ("2", mv->get("B")->get());
-  EXPECT_EQ("3", mv->get("C")->get());
-  EXPECT_TRUE(NULL == mv->get("D"));
+  lite::data *hw = new lite::string("Hello World!");
+  map->set("en", hw);
+  map->set("fr", "Bonjour Monde!");
 
-  delete map["A"];
-  delete map["B"];
-  delete map["C"];
+  ASSERT_EQ(lite::MAP, map->type());
+  ASSERT_EQ(2, map->size());
+  ASSERT_EQ("Hello World!", map->at("en")->str());
+  ASSERT_EQ("Bonjour Monde!", (*map)["fr"]->str());
 
-  delete mv;
+  delete hw;
+  delete map;
 }
-

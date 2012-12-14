@@ -31,10 +31,6 @@ set(TEST_LIBS
 
 include_directories(${PROJECT_SOURCE_DIR}/include ${GTEST_INCLUDE_DIRS})
 
-add_executable(util_unittest "util_unittest.cc")
-target_link_libraries(util_unittest ${TEST_LIBS}) 
-add_test(UTIL_UNITTEST util_unittest)
-
 add_executable(data_unittest "data_unittest.cc")
 target_link_libraries(data_unittest ${TEST_LIBS}) 
 add_test(DATA_UNITTEST data_unittest)

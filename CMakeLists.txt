@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(LITE)
 
 include(FindDoxygen)
+include(CheckFunctionExists)
 
 set(LITE_OUTPUT_TEMP_DIR ${LITE_BINARY_DIR}/.build)
 
@@ -11,6 +12,8 @@ if(DEBUG)
   set(CMAKE_CXX_FLAGS "-g -O0")
   set(CMAKE_VERBOSE_MAKEFILE ON)
 endif()
+
+CHECK_FUNCTION_EXISTS(pthread_create HAVE_PTHREAD)
 
 # Documentation
 if(DOXYGEN_FOUND)

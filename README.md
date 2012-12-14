@@ -58,9 +58,9 @@ If you want to use Visual Studio... Try it ;)
 ```cpp
 std::string tmpl = "Hello {% $who %}{% $sign %}\nHow are you ?";
 
-std::map<std::string, lite::data *> data;
-data["who"] = lite::make_data("world");
-data["sign"] = lite::make_data("!");
+lite::data *data = new lite::map();
+data->set("who", "world");
+data->set("sign", "!");
 
 std::string result = lite::render(tmpl, data);
 ```
@@ -72,8 +72,8 @@ std::string tmpl = "Hello "
   "{% if name %}{% $name %}{% end %}" 
   "{% if not name %}world{% end %}";
 
-std::map<std::string, lite::data *> data;
-data["person"] = lite::make_data("you");
+lite::data *data = new lite::map();
+data->set("person", "you");
 
 std::string result = lite::render(tmpl, data);
 ```
@@ -105,13 +105,13 @@ std::string tmpl = "{% for number in sequence %}"
   "* {% $number %}\n"
   "{% end %}"; 
 
-std::vector<lite::data *> list;
-list.push_back(lite::make_data("1"));
-list.push_back(lite::make_data("2"));
-list.push_back(lite::make_data("3"));
+lite::data *list = new lite::list();
+list->set("1");
+list->set("2");
+list->set("3");
 
-std::map<std::string, lite::data *> data;
-data["sequence"] = lite::make_data(list);
+lite::data *data = new lite::map();
+data->set("sequence", list);
 
 std::string result = lite::render(tmpl, data);
 ```
